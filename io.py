@@ -6,11 +6,11 @@ import RPi.GPIO as GPIO
 import time
 import json
 
-class IO(object):
+class io(object):
 	"""basic IO and Pin remapping. Using board mode."""
 
 	def __init__(self, configfile='ioconfig.json'):
-		super(IO, self).__init__()
+		super(io, self).__init__()
 		self.config=json.load(open(configfile))
 		self.iomap=self.config["iomap"]
 		self.pinnum=len(self.iomap)
