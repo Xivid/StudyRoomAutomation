@@ -3,11 +3,13 @@
 # Project core code, to control hardware device
 # 
 import io
-
+import time
+import client
 class control(object):
 	"""docstring for control, Basic counting."""
 	light=[0,1]
 	monitor=[2,3]
+	clientcode="A"
 
 	def __init__(self, arg):
 		super(control, self).__init__()
@@ -42,11 +44,12 @@ class control(object):
 				## 其他情况输入错误
 				return 0
 
-	def mainloop(self,foo1,foo2):
+	def mainloop(self):
 		while 1:
 			if io.get(self.monitor[0]):
 				if self.passroad(self.monitor[0],self.monitor[1]):
-					foo1()
+					client.send(self.clientcode+'+')
 			if io.get(self.monitor[1]):
 				if self.passroad(self.monitor[1],self.monitor[0]):
-					foo2()
+					client.send(self.clientcode+'+')
+			time.sleep(0.1)
