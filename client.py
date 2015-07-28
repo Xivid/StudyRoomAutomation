@@ -19,7 +19,7 @@ def send(message):
     print 'Socket Created'
      
     host = '127.0.0.1';
-    port = 8000;
+    port = 8756;
      
     try:
         remote_ip = socket.gethostbyname( host )
