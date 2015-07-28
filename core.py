@@ -21,7 +21,7 @@ class control(object):
 			if io.get(pin1):
 
 				if io.get(pin2):
-					## 两个角都穿过为错误的通过方式
+					## 两个脚都穿过为错误的通过方式
 					return 0
 				else:
 					## 等待人进入第二范围
@@ -35,7 +35,7 @@ class control(object):
 					## 等待通过第一脚
 					pass
 				if io.get(pin2):
-					## 同时离开两个角，不能出现
+					## 同时离开两个脚，不能出现
 					return 0
 				while !io.get(pin2):
 					pass
