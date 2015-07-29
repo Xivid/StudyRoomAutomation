@@ -6,6 +6,7 @@
 import io
 import time
 import client
+from time import sleep
 class control(object):
     """docstring for control, Basic counting."""
     global myio
@@ -46,35 +47,48 @@ class control(object):
                 return 0
 
     def mainloop(self):
-        # Solution 1
+        # Solution 1: 
         state = [0, 0] # 空闲状态
         enter = [False, False] # 在空闲状态，谁先被遮住
         leave = [False, False] # 在繁忙状态，谁先被释放
         while True: # 状态转移
-            nxstate = [io.get(self.monitor[0]), io.get(self.monitor[1])]  # 次态
+            nxstate = [myio.get(self.monitor[0]), myio.get(self.monitor[1])]  # 次态
+            
             if state == [0, 0]:
-                enter = [nxstate[0] == '1', nxstate[1] == '1']
+                enter = [nxstate[0] == 1, nxstate[1] == 1]
             elif state == [0, 1]:
-                leave[1] = (not leave[0] and nxstate[1] == '0')
+                leave[1] = (not leave[0] and nxstate[1] == 0)
             elif state == [1, 0]:
-                leave[0] = (not leave[1] and nxstate[0] == '0')
+                leave[0] = (not leave[1] and nxstate[0] == 0)
             elif state == [1, 1]:
-                leave = [nxstate[0] == '0', nxstate[1] == '0']
+                leave = [nxstate[0] == 0, nxstate[1] == 0]
+            print "st =", state, "nx =", nxstate, "enter =", enter, "leave =", leave
             state = nxstate
+
+            flag = False # reset flag
             if enter != [False, False]:
                 if enter == [True, False]: # 0首先被遮住
                     client.send(self.clientcode+'+')
+                    flag = True
+                    print "----->"
                 elif enter == [False, True]: # 1首先被遮住
                     client.send(self.clientcode+'-')
+                    flag = True
+                    print "<-----"
                 elif enter == [True, True]: # 同时在空闲状态被遮住
                     if leave == [True, False]: # 0首先被释放
                         client.send(self.clientcode+'+')
+                        flag = True
+                        print "----->"
                     elif leave == [False, True]: # 1首先被释放
                         client.send(self.clientcode+'-')
-                enter = [False, False]
-                leave = [False, False]
-                state = [0, 0]
+                        flag = True
+                        print "----->"
+                if flag:
+                    enter = [False, False]
+                    leave = [False, False]
             # 其余情况，无法判断方向，直接忽略
+            sleep(0.1)
 
 
 
