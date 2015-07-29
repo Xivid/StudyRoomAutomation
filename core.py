@@ -45,6 +45,7 @@ class control(object):
                 return 0
 
     def mainloop(self):
+        # Solution 0
         while 1:
             if io.get(self.monitor[0]):
                 if self.passroad(self.monitor[0],self.monitor[1]):
@@ -53,6 +54,38 @@ class control(object):
                 if self.passroad(self.monitor[1],self.monitor[0]):
                     client.send(self.clientcode+'+')
             time.sleep(0.1)
+
+        # Solution 1
+        state = [0, 0] # 空闲状态
+        enter = [False, False] # 在空闲状态，谁先被遮住
+        leave = [False, False] # 在繁忙状态，谁先被释放
+        while True: # 状态转移
+            nxstate = [io.get(self.monitor[0]), io.get(self.monitor[1])]  # 次态
+            if state == [0, 0]:
+                enter = [nxstate[0] == '1', nxstate[1] == '1']
+            else if state == [0, 1]:
+                leave[1] = (not leave[0] and nxstate[1] == '0')
+            else if state == [1, 0]:
+                leave[0] = (not leave[1] and nxstate[0] == '0')
+            else if state == [1, 1]:
+                leave = [nxstate[0] == '0', nxstate[1] == '0']
+            state = nxstate
+            if enter != [False, False]:
+                if enter == [True, False]: # 0首先被遮住
+                    client.send(self.clientcode+'+')
+                else if enter == [False, True]: # 1首先被遮住
+                    client.send(self.clientcode+'-')
+                else if enter == [True, True]: # 同时在空闲状态被遮住
+                    if leave == [True, False]: # 0首先被释放
+                        client.send(self.clientcode+'+')
+                    else if leave == [False, True]: # 1首先被释放
+                        client.send(self.clientcode+'-')
+                enter = [False, False]
+                leave = [False, False]
+                state = [0, 0]
+            # 其余情况，无法判断方向，直接忽略
+
+
 
 if __name__ == "__main__":
     print "ok"
