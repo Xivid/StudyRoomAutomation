@@ -47,7 +47,7 @@ class control(object):
                 return 0
 
     def mainloop(self):
-        # Solution 1: 
+        # Solution 1: 因两传感器之间间隔很短，故不考虑“无->m0->无->m1->无”和"无->m1->无->m0->无"的情况
         state = [0, 0] # 空闲状态
         enter = [False, False] # 在空闲状态，谁先被遮住
         leave = [False, False] # 在繁忙状态，谁先被释放
