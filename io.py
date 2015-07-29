@@ -14,24 +14,25 @@ class io(object):
 		self.config=json.load(open(configfile))
 		self.iomap=self.config["iomap"]
 		self.pinnum=len(self.iomap)
-		self.mode()
+		GPIO.setmode(GPIO.BOARD)
 
-	def mode(m=GPIO.BOARD):
-		GPIO.setmode(m)
-
-	def setup(pin,mode):
+	def setup(self, pin,mode):
+                if mode == "out":
+                    mode = GPIO.OUT
+                else:
+                    mode = GPIO.IN
 		if isinstance(pin,int):
 			pin=[pin]
 		for i in pin:
 			GPIO.setup(self.iomap[i],mode)
 
-	def set(l,o):
+	def set(self, l,o):
 		if isinstance(l,int):
 			l=[l]
 		for i in l:
 			GPIO.output(self.iomap[i],o)
 
-	def get(pin):
+	def get(self, pin):
 		return GPIO.input(self.iomap[pin])
 
 
