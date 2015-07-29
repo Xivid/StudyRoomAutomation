@@ -54,22 +54,22 @@ class control(object):
             nxstate = [io.get(self.monitor[0]), io.get(self.monitor[1])]  # 次态
             if state == [0, 0]:
                 enter = [nxstate[0] == '1', nxstate[1] == '1']
-            else if state == [0, 1]:
+            elif state == [0, 1]:
                 leave[1] = (not leave[0] and nxstate[1] == '0')
-            else if state == [1, 0]:
+            elif state == [1, 0]:
                 leave[0] = (not leave[1] and nxstate[0] == '0')
-            else if state == [1, 1]:
+            elif state == [1, 1]:
                 leave = [nxstate[0] == '0', nxstate[1] == '0']
             state = nxstate
             if enter != [False, False]:
                 if enter == [True, False]: # 0首先被遮住
                     client.send(self.clientcode+'+')
-                else if enter == [False, True]: # 1首先被遮住
+                elif enter == [False, True]: # 1首先被遮住
                     client.send(self.clientcode+'-')
-                else if enter == [True, True]: # 同时在空闲状态被遮住
+                elif enter == [True, True]: # 同时在空闲状态被遮住
                     if leave == [True, False]: # 0首先被释放
                         client.send(self.clientcode+'+')
-                    else if leave == [False, True]: # 1首先被释放
+                    elif leave == [False, True]: # 1首先被释放
                         client.send(self.clientcode+'-')
                 enter = [False, False]
                 leave = [False, False]
