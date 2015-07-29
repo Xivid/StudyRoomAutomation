@@ -19,6 +19,7 @@ class control(object):
         #self.arg = arg
         myio.setup(self.light, "out")
         myio.setup(self.monitor, "in")
+        myio.set(self.light, 0)
     
     def passroad(self, pin1,pin2):
             if myio.get(pin1):
